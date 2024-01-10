@@ -2,14 +2,14 @@
 
 # Update and install necessary packages
 sudo apt-get update
-sudo apt-get install -y git python3 python3-pip python3-venv tmux
+sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev
 
 # Clone the main Jarvis repository
 git clone https://github.com/XenioxYT/jarvis.git
 cd jarvis
 
 # Open a new tmux session
-tmux new-session -d -s jarvis_session
+tmux new-session -d -s jarvis
 
 # Inside the tmux session, execute the following:
 tmux send-keys "

@@ -26,7 +26,7 @@ tmux send-keys "
 
     # Install requirements
     pip install -r jarvis-gpt/requirements.txt
-    pip install -r jarvis-gpt/jarvis-setup/reuirements.txt
+    pip install -r jarvis-gpt/jarvis-setup/requirements.txt
 
     # Navigate to manage.py directory
     cd jarvis-gpt/jarvis-setup/jarvisSetup

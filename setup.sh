@@ -26,7 +26,7 @@ tmux send-keys "
 
     # Install requirements
     pip install -r jarvis-gpt/requirements.txt
-    pip install jarvis-gpt/jarvis-setup
+    pip install -r jarvis-gpt/jarvis-setup/reuirements.txt
 
     # Navigate to manage.py directory
     cd jarvis-gpt/jarvis-setup/jarvisSetup
@@ -36,4 +36,4 @@ tmux send-keys "
 " C-m
 
 # Print instruction for detaching from tmux
-echo 'Press CTRL+b then d to detach from the tmux session.'
+echo 'Please wait a few moments for the server to start. It will be available at http://localhost:8000'

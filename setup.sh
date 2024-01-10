@@ -14,9 +14,9 @@ tmux new-session -d -s jarvis_session
 # Inside the tmux session, execute the following:
 tmux send-keys "
     # Clone the Jarvis-GPT repository
-    git clone https://github.com/XenioxYT/jarvis-gpt.git
+    git clone https://github.com/XenioxYT/jarvis.git
     # Clone the Jarvis-Setup repository
-    git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup
+    git clone https://github.com/XenioxYT/jarvis.git jarvis-gpt/jarvis-setup
 
     # Create a new virtual environment
     python3 -m venv jarvis-venv

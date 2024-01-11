@@ -48,8 +48,6 @@ REL_PATH_TO_SECOND_REQUIREMENTS="./jarvis-gpt/jarvis-setup/requirements.txt"
 # Install packages from the first requirements.txt with progress and error output
 echo "Installing packages from jarvis-gpt requirements.txt..."
 pip install -r "$REL_PATH_TO_FIRST_REQUIREMENTS" > /dev/null 2>&1 &
-spinner $!
-wait $!
 EXIT_STATUS=$?
 if [ $EXIT_STATUS -eq 0 ]; then
     echo -e "All packages from jarvis-gpt requirements.txt installed successfully \e[92m[✔]\e[0m"
@@ -60,8 +58,6 @@ fi
 # Install packages from the second requirements.txt with progress and error output
 echo "Installing packages from jarvis-setup requirements.txt..."
 pip install -r "$REL_PATH_TO_SECOND_REQUIREMENTS" > /dev/null 2>&1 &
-spinner $!
-wait $!
 EXIT_STATUS=$?
 if [ $EXIT_STATUS -eq 0 ]; then
     echo -e "All packages from jarvis-setup requirements.txt installed successfully \e[92m[✔]\e[0m"

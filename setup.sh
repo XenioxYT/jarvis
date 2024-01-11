@@ -41,45 +41,33 @@ tmux new-session -d -s jarvis
 
 # Install packages from requirements.txt with progress and error output
 REL_PATH_TO_FIRST_REQUIREMENTS="./jarvis-gpt/requirements.txt"
-
-# Install packages from the first requirements.txt with progress
-echo "Installing packages from first requirements.txt..."
-pip install -r "$REL_PATH_TO_FIRST_REQUIREMENTS" &> /tmp/pip_install_output &
-PIP_INSTALL_PID=$!
-
-while kill -0 $PIP_INSTALL_PID 2> /dev/null; do
-    sleep 1
-    clear
-    tail -n 1 /tmp/pip_install_output
-done
-
-wait $PIP_INSTALL_PID
-EXIT_STATUS=$?
-if [ $EXIT_STATUS -eq 0 ]; then
-    echo -e "All packages from first requirements.txt installed successfully \e[92m[✔]\e[0m"
-else
-    echo -e "Error installing packages from first requirements.txt \e[91m[X]\e[0m"
-fi
-
 # Path to the second requirements.txt
 REL_PATH_TO_SECOND_REQUIREMENTS="./jarvis-gpt/jarvis-setup/requirements.txt"
 
+
+# Install packages from the first requirements.txt with progress and error output
+echo "Installing packages from jarvis-gpt requirements.txt..."
+pip install -r "$REL_PATH_TO_FIRST_REQUIREMENTS" > /dev/null 2>&1 &
+spinner $!
+wait $!
+EXIT_STATUS=$?
+if [ $EXIT_STATUS -eq 0 ]; then
+    echo -e "All packages from jarvis-gpt requirements.txt installed successfully \e[92m[✔]\e[0m"
+else
+    echo -e "Error installing packages from jarvis-gpt requirements.txt \e[91m[X]\e[0m"
+fi
+
 # Install packages from the second requirements.txt with progress and error output
-TOTAL_PACKAGES=$(wc -l < "$REL_PATH_TO_SECOND_REQUIREMENTS")
-CURRENT_PACKAGE=1
-while IFS= read -r package || [[ -n "$package" ]]; do
-    echo -n "Installing package $CURRENT_PACKAGE/$TOTAL_PACKAGES: $package..."
-    pip install $package > /dev/null 2>&1 &
-    spinner $!
-    wait $!
-    EXIT_STATUS=$?
-    if [ $EXIT_STATUS -eq 0 ]; then
-        echo -e "\e[92m[✔]\e[0m"
-    else
-        echo -e "\e[91m[X]\e[0m"
-    fi
-    ((CURRENT_PACKAGE++))
-done < "$REL_PATH_TO_SECOND_REQUIREMENTS"
+echo "Installing packages from jarvis-setup requirements.txt..."
+pip install -r "$REL_PATH_TO_SECOND_REQUIREMENTS" > /dev/null 2>&1 &
+spinner $!
+wait $!
+EXIT_STATUS=$?
+if [ $EXIT_STATUS -eq 0 ]; then
+    echo -e "All packages from jarvis-setup requirements.txt installed successfully \e[92m[✔]\e[0m"
+else
+    echo -e "Error installing packages from jarvis-setup requirements.txt \e[91m[X]\e[0m"
+fi
 
 # Continue with Django server setup in tmux
 tmux send-keys "

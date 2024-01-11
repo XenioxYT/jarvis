@@ -5,7 +5,7 @@ echo "Starting setup..."
 # Function to display a spinner
 function spinner() {
     local pid=$1
-    local delay=0.1
+    local delay=0.5
     local spinstr='|/-\\'
     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
         local temp=${spinstr#?}

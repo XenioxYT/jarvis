@@ -1,5 +1,5 @@
 #!/bin/bash
-
+tmux kill-session -t jarvis > /dev/null 2>&1
 echo "Starting setup..."
 
 # Function to display a spinner

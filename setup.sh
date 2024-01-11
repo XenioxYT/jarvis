@@ -24,25 +24,30 @@ spinner $!
 sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev > /dev/null 2>&1 &
 spinner $!
 
-# Open a new tmux session and prepare the environment
-tmux new-session -d -s jarvis
-tmux send-keys "
-    git clone https://github.com/XenioxYT/jarvis-gpt.git
-    git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup
-    python3 -m venv jarvis-venv
-    source jarvis-venv/bin/activate
-" C-m
+# Clone the Jarvis-GPT and Jarvis-Setup repositories
+echo "Cloning Jarvis-GPT repository..."
+git clone https://github.com/XenioxYT/jarvis-gpt.git > /dev/null 2>&1 &
+spinner $!
+echo "Cloning Jarvis-Setup repository..."
+git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup > /dev/null 2>&1 &
+spinner $!
 
-# Ensure the virtual environment is activated before proceeding
-tmux send-keys "source jarvis-venv/bin/activate" C-m
-sleep 2 # wait a bit to ensure that venv is activated
+# Create and activate the virtual environment
+python3 -m venv jarvis-venv
+source jarvis-venv/bin/activate
+
+# Open a new tmux session
+tmux new-session -d -s jarvis
 
 # Install packages from requirements.txt with progress and error output
-TOTAL_PACKAGES=$(wc -l < ./jarvis/jarvis-gpt/requirements.txt)
+REL_PATH_TO_FIRST_REQUIREMENTS="./jarvis-gpt/requirements.txt"
+
+# Install packages from the first requirements.txt with progress and error output
+TOTAL_PACKAGES=$(wc -l < "$REL_PATH_TO_FIRST_REQUIREMENTS")
 CURRENT_PACKAGE=1
 while IFS= read -r package || [[ -n "$package" ]]; do
     echo -n "Installing package $CURRENT_PACKAGE/$TOTAL_PACKAGES: $package..."
-    (source jarvis-venv/bin/activate && pip install $package > /dev/null 2>&1) &
+    pip install $package > /dev/null 2>&1 &
     spinner $!
     wait $!
     EXIT_STATUS=$?
@@ -52,13 +57,17 @@ while IFS= read -r package || [[ -n "$package" ]]; do
         echo -e "\e[91m[X]\e[0m"
     fi
     ((CURRENT_PACKAGE++))
-done < ./jarvis/jarvis-gpt/requirements.txt
+done < "$REL_PATH_TO_FIRST_REQUIREMENTS"
 
-TOTAL_PACKAGES=$(wc -l < ./jarvis/jarvis-gpt/jarvis-setep/requirements.txt)
+# Path to the second requirements.txt
+REL_PATH_TO_SECOND_REQUIREMENTS="./jarvis-gpt/jarvis-setup/requirements.txt"
+
+# Install packages from the second requirements.txt with progress and error output
+TOTAL_PACKAGES=$(wc -l < "$REL_PATH_TO_SECOND_REQUIREMENTS")
 CURRENT_PACKAGE=1
 while IFS= read -r package || [[ -n "$package" ]]; do
     echo -n "Installing package $CURRENT_PACKAGE/$TOTAL_PACKAGES: $package..."
-    (source jarvis-venv/bin/activate && pip install $package > /dev/null 2>&1) &
+    pip install $package > /dev/null 2>&1 &
     spinner $!
     wait $!
     EXIT_STATUS=$?
@@ -68,9 +77,9 @@ while IFS= read -r package || [[ -n "$package" ]]; do
         echo -e "\e[91m[X]\e[0m"
     fi
     ((CURRENT_PACKAGE++))
-done < ./jarvis/jarvis-gpt/jarvis-setup/requirements.txt
+done < "$REL_PATH_TO_SECOND_REQUIREMENTS"
 
-# Continue with Django server setup
+# Continue with Django server setup in tmux
 tmux send-keys "
     cd jarvis-gpt/jarvis-setup/jarvisSetup
     python manage.py makemigrations

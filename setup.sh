@@ -24,12 +24,6 @@ spinner $!
 sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev > /dev/null 2>&1 &
 spinner $!
 
-# Clone the main Jarvis repository
-echo "Cloning Jarvis repository..."
-git clone https://github.com/XenioxYT/jarvis.git > /dev/null 2>&1 &
-spinner $!
-cd jarvis
-
 # Open a new tmux session and prepare the environment
 tmux new-session -d -s jarvis
 tmux send-keys "

@@ -44,7 +44,7 @@ tmux send-keys "source jarvis-venv/bin/activate" C-m
 sleep 2 # wait a bit to ensure that venv is activated
 
 # Install packages from requirements.txt with progress and error output
-TOTAL_PACKAGES=$(wc -l < jarvis/jarvis-gpt/requirements.txt)
+TOTAL_PACKAGES=$(wc -l < /jarvis/jarvis/jarvis-gpt/requirements.txt)
 CURRENT_PACKAGE=1
 while IFS= read -r package || [[ -n "$package" ]]; do
     echo -n "Installing package $CURRENT_PACKAGE/$TOTAL_PACKAGES: $package..."
@@ -60,7 +60,7 @@ while IFS= read -r package || [[ -n "$package" ]]; do
     ((CURRENT_PACKAGE++))
 done < jarvis/jarvis-gpt/requirements.txt
 
-TOTAL_PACKAGES=$(wc -l < jarvis/jarvis-gpt/jarvis-setep/requirements.txt)
+TOTAL_PACKAGES=$(wc -l < /jarvis/jarvis/jarvis-gpt/jarvis-setep/requirements.txt)
 CURRENT_PACKAGE=1
 while IFS= read -r package || [[ -n "$package" ]]; do
     echo -n "Installing package $CURRENT_PACKAGE/$TOTAL_PACKAGES: $package..."
@@ -74,7 +74,7 @@ while IFS= read -r package || [[ -n "$package" ]]; do
         echo -e "\e[91m[X]\e[0m"
     fi
     ((CURRENT_PACKAGE++))
-done < jarvis/jarvis-gpt/jarvis-setup/requirements.txt
+done < /jarvis/jarvis/jarvis-gpt/jarvis-setup/requirements.txt
 
 # Continue with Django server setup
 tmux send-keys "

@@ -18,7 +18,7 @@ def install_requirements(file_path):
     with yaspin(Spinners.pong, text=f"Installing packages from {file_path}...") as spinner:
         exit_status, error_message = run_command(f"./jarvis-venv/bin/pip install -r {file_path}")
         if exit_status == 0:
-            spinner.ok("✅ ")
+            spinner.ok("✅ [SUCCESS]")
             spinner.text = f"Installed packages from {file_path}"
         else:
             spinner.fail(f"❌ Error: {error_message}")
@@ -45,13 +45,14 @@ tmux_commands = """
     python manage.py migrate
     python manage.py runserver 0.0.0.0:8000
 """
-subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
+with yaspin(Spinners.pong, text="Setting up Django server...") as spinner:
+    subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
+    time.sleep(3)
 
 # Wait for Django server to start
-with yaspin(text="Starting Django server...") as spinner:
+with yaspin(text="Starting Django server..."):
     while run_command("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
         time.sleep(1)
-        spinner.ok("✅ [Done] ")
 
 # Fetch server IP address
 ip_addr = subprocess.check_output("hostname -I | awk '{print $1}'", shell=True).decode().strip()

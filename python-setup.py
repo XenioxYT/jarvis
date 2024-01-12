@@ -15,7 +15,7 @@ def run_command(command, display_output=False):
 
 def install_requirements(file_path):
     with yaspin(text=f"Installing packages from {file_path}..."):
-        exit_status = run_command(f"pip install -r {file_path}", display_output=True)
+        exit_status = run_command(f"./jarvis-venv/bin/pip install -r {file_path}")
         if exit_status == 0:
             print(f"\033[92mAll packages from {file_path} installed successfully [✔]\033[0m")
         else:
@@ -27,8 +27,8 @@ subprocess.call("tmux kill-session -t jarvis > /dev/null 2>&1", shell=True)
 print("Starting setup...")
 
 # # Create and activate the virtual environment
-# os.system("python3 -m venv jarvis-venv")
-# os.system("source jarvis-venv/bin/activate")
+os.system("python3 -m venv jarvis-venv")
+os.system("source jarvis-venv/bin/activate")
 
 # Open a new tmux session
 subprocess.call("tmux new-session -d -s jarvis", shell=True)
@@ -39,6 +39,7 @@ install_requirements("./jarvis-gpt/jarvis-setup/requirements.txt")
 
 # Django server setup in tmux
 tmux_commands = """
+    source jarvis-venv/bin/activate
     cd jarvis-gpt/jarvis-setup/jarvisSetup
     python manage.py makemigrations
     python manage.py migrate

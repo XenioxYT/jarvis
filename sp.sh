@@ -10,7 +10,7 @@ source setup/bin/activate
 pip install yaspin
 
 # Run your installation Python script
-python your_install_script.py
+python python-setup.py
 
 # Deactivate the 'setup' virtual environment
 deactivate

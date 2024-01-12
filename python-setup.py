@@ -8,6 +8,7 @@ def run_command(command, display_output=False):
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while True:
         output = process.stdout.readline()
+        print(output.decode().strip())
         if display_output and output:
             print(output.decode().strip())
         if "Starting development server at" in output.decode():

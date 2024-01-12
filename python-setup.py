@@ -1,6 +1,6 @@
 import subprocess
 import time
-import os
+import sys
 from yaspin import yaspin
 from yaspin.spinners import Spinners
 
@@ -18,9 +18,11 @@ def install_requirements(file_path):
     with yaspin(Spinners.pong, text=f"Installing packages from {file_path}...") as spinner:
         exit_status, error_message = run_command(f"./jarvis-venv/bin/pip install -r {file_path}")
         if exit_status == 0:
-            spinner.ok("✅ ")
+            spinner.ok("✅ [Done] ")
         else:
             spinner.fail(f"❌ Error: {error_message}")
+            print("\033[91mInstallation failed. Please see the error above.\033[0m")  # Print in red
+            sys.exit(1)  # Exit the script
 
 # Kill existing tmux session
 subprocess.call("tmux kill-session -t jarvis > /dev/null 2>&1", shell=True)
@@ -48,7 +50,7 @@ subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
 with yaspin(Spinners.pong, text="Starting Django server...") as spinner:
     while run_command("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
         time.sleep(1)
-    spinner.ok("✅ ")
+        spinner.ok("✅ [Done] ")
 
 # Fetch server IP address
 ip_addr = subprocess.check_output("hostname -I | awk '{print $1}'", shell=True).decode().strip()

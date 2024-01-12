@@ -2,33 +2,30 @@ import subprocess
 import time
 import os
 from yaspin import yaspin
+from yaspin.spinners import Spinners
 
 def run_command(command, display_output=False):
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while True:
         output = process.stdout.readline()
         if display_output and output:
             print(output.decode().strip())
         if process.poll() is not None:
             break
-    return process.returncode
+    return process.returncode, process.stderr.read().decode()
 
 def install_requirements(file_path):
-    with yaspin(text=f"Installing packages from {file_path}..."):
-        exit_status = run_command(f"./jarvis-venv/bin/pip install -r {file_path}")
+    with yaspin(Spinners.pong, text=f"Installing packages from {file_path}...") as spinner:
+        exit_status, error_message = run_command(f"./jarvis-venv/bin/pip install -r {file_path}")
         if exit_status == 0:
-            print(f"\033[92mAll packages from {file_path} installed successfully [✔]\033[0m")
+            spinner.ok("✅ ")
         else:
-            print(f"\033[91mError installing packages from {file_path} [X]\033[0m")
+            spinner.fail(f"❌ Error: {error_message}")
 
 # Kill existing tmux session
 subprocess.call("tmux kill-session -t jarvis > /dev/null 2>&1", shell=True)
 
 print("Starting setup...")
-
-# # Create and activate the virtual environment
-os.system("python3 -m venv jarvis-venv")
-os.system("source jarvis-venv/bin/activate")
 
 # Open a new tmux session
 subprocess.call("tmux new-session -d -s jarvis", shell=True)
@@ -48,9 +45,10 @@ tmux_commands = """
 subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
 
 # Wait for Django server to start
-with yaspin(text="Starting Django server..."):
+with yaspin(Spinners.pong, text="Starting Django server...") as spinner:
     while run_command("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
         time.sleep(1)
+    spinner.ok("✅ ")
 
 # Fetch server IP address
 ip_addr = subprocess.check_output("hostname -I | awk '{print $1}'", shell=True).decode().strip()

@@ -47,10 +47,9 @@ tmux_commands = """
 subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
 
 # Wait for Django server to start
-with yaspin(Spinners.pong, text="Starting Django server...") as spinner:
+with yaspin(text="Starting Django server..."):
     while run_command("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
         time.sleep(1)
-        spinner.ok("✅ [Done] ")
 
 # Fetch server IP address
 ip_addr = subprocess.check_output("hostname -I | awk '{print $1}'", shell=True).decode().strip()

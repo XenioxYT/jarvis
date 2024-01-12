@@ -10,6 +10,8 @@ def run_command(command, display_output=False):
         output = process.stdout.readline()
         if display_output and output:
             print(output.decode().strip())
+        if "Starting development server at" in output.decode():
+            return 0
         if process.poll() is not None:
             break
     return process.returncode, process.stderr.read().decode()
@@ -45,9 +47,8 @@ tmux_commands = """
     python manage.py migrate
     python manage.py runserver 0.0.0.0:8000
 """
-with yaspin(Spinners.pong, text="Setting up Django server...") as spinner:
+with yaspin(text="Setting up Django server...") as spinner:
     subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
-    time.sleep(3)
 
 # Wait for Django server to start
 with yaspin(text="Starting Django server..."):

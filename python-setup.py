@@ -26,20 +26,9 @@ subprocess.call("tmux kill-session -t jarvis > /dev/null 2>&1", shell=True)
 
 print("Starting setup...")
 
-# Update and install necessary packages
-with yaspin(text="Updating and installing packages..."):
-    run_command("sudo apt-get update > /dev/null 2>&1")
-    run_command("sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev > /dev/null 2>&1")
-
-# Clone repositories
-with yaspin(text="Cloning Jarvis-GPT repository..."):
-    run_command("git clone https://github.com/XenioxYT/jarvis-gpt.git > /dev/null 2>&1")
-with yaspin(text="Cloning Jarvis-Setup repository..."):
-    run_command("git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup > /dev/null 2>&1")
-
-# Create and activate the virtual environment
-os.system("python3 -m venv jarvis-venv")
-os.system("source jarvis-venv/bin/activate")
+# # Create and activate the virtual environment
+# os.system("python3 -m venv jarvis-venv")
+# os.system("source jarvis-venv/bin/activate")
 
 # Open a new tmux session
 subprocess.call("tmux new-session -d -s jarvis", shell=True)

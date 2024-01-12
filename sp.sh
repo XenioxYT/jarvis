@@ -1,16 +1,29 @@
 #!/bin/bash
 
-# Set up the initial 'setup' virtual environment
-python3 -m venv setup
+# Function to run commands and display output
+run_command() {
+    echo "Running command: $1"
+    bash -c "$1"
+}
 
-# Activate the 'setup' virtual environment
-source setup/bin/activate
+# Update and install necessary packages
+echo "Updating and installing packages..."
+run_command "sudo apt-get update > /dev/null 2>&1"
+run_command "sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev > /dev/null 2>&1"
 
-# Install yaspin in the 'setup' environment
+# Clone repositories
+echo "Cloning Jarvis-GPT repository..."
+run_command "git clone https://github.com/XenioxYT/jarvis-gpt.git > /dev/null 2>&1"
+
+echo "Cloning Jarvis-Setup repository..."
+run_command "git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup > /dev/null 2>&1"
+
+# Create and activate the 'jarvis-venv' virtual environment
+python3 -m venv jarvis-venv
+source jarvis-venv/bin/activate
+
+# Install yaspin in the 'jarvis-venv' environment
 pip install yaspin
 
-# Run your installation Python script
+# Run the Python installation script
 python python-setup.py
-
-# Deactivate the 'setup' virtual environment
-deactivate

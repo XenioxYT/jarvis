@@ -28,13 +28,7 @@ def install_requirements(file_path):
             print("\033[91mInstallation failed. Please see the error above.\033[0m")  # Print in red
             sys.exit(1)  # Exit the script
 
-# Kill existing tmux session
-subprocess.call("tmux kill-session -t jarvis > /dev/null 2>&1", shell=True)
-
 print("Starting setup...")
-
-# Open a new tmux session
-subprocess.call("tmux new-session -d -s jarvis", shell=True)
 
 # Install packages from requirements.txt
 install_requirements("./jarvis-gpt/requirements.txt")

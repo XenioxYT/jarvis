@@ -1,38 +1,40 @@
 #!/bin/bash
-
 # Function to run commands and display output
 run_command() {
-    echo "Running command: $1"
-    bash -c "$1"
+    echo -e "\033[1;34mRunning command:\033[0m $1"
+    python3 -m yaspin -c "bash -c '$1'"
 }
 
 # Update and install necessary packages
 
 # kill existing tmux sessions
-echo "Killing existing tmux sessions..."
-run_command "tmux kill-server > /dev/null 2>&1"
+echo -e "\033[1;32mKilling existing tmux sessions...\033[0m"
+run_command "tmux kill-server"
 
 # set up tmux session
-echo "Setting up tmux session..."
-run_command "tmux new-session -d -s jarvis > /dev/null 2>&1"
+echo -e "\033[1;32mSetting up tmux session...\033[0m"
+run_command "tmux new-session -d -s jarvis"
 
-echo "Updating and installing packages..."
-run_command "sudo apt-get update > /dev/null 2>&1"
-run_command "sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev git > /dev/null 2>&1"
+echo -e "\033[1;32mUpdating and installing packages...\033[0m"
+run_command "sudo apt-get update"
+run_command "sudo apt-get install -y git python3 python3-pip python3-venv tmux pkg-config libcairo2-dev libgirepository1.0-dev git"
 
 # Clone repositories
-echo "Cloning Jarvis-GPT repository..."
-run_command "git clone https://github.com/XenioxYT/jarvis-gpt.git > /dev/null 2>&1"
+echo -e "\033[1;32mCloning Jarvis-GPT repository...\033[0m"
+run_command "git clone https://github.com/XenioxYT/jarvis-gpt.git"
 
-echo "Cloning Jarvis-Setup repository..."
-run_command "git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup > /dev/null 2>&1"
+echo -e "\033[1;32mCloning Jarvis-Setup repository...\033[0m"
+run_command "git clone https://github.com/XenioxYT/jarvis-setup.git jarvis-gpt/jarvis-setup"
 
 # Create and activate the 'jarvis-venv' virtual environment
+echo -e "\033[1;32mCreating and activating the 'jarvis-venv' virtual environment...\033[0m"
 python3 -m venv jarvis-venv
 source jarvis-venv/bin/activate
 
 # Install yaspin in the 'jarvis-venv' environment
+echo -e "\033[1;32mInstalling yaspin in the 'jarvis-venv' environment...\033[0m"
 pip install yaspin
 
 # Run the Python installation script
+echo -e "\033[1;32mRunning the Python installation script...\033[0m"
 python python-setup.py

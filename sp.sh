@@ -2,9 +2,17 @@
 # Function to run commands and display output
 run_command() {
     echo -e "\033[1;34mRunning command:\033[0m $1"
-    python3 -m yaspin -c "bash -c '$1'"
+    (
+        while :; do
+            for s in / - \\ \|; do 
+                printf "\r$s"; 
+                sleep .1; 
+            done; 
+        done & 
+        bash -c "$1"
+        kill $!; trap 'kill $!' SIGTERM
+    ) 
 }
-
 # Update and install necessary packages
 echo -e "\033[1;32mUpdating and installing necessary packages...\033[0m"
 run_command "sudo apt-get update"

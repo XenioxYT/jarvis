@@ -50,7 +50,13 @@ tmux_commands = """
     python manage.py migrate
     python manage.py runserver 0.0.0.0:8000
 """
+def check_if_session_exists(session_name):
+    output = subprocess.run(['tmux', 'has-session', '-t', session_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    return output.returncode == 0
+
 with yaspin(text="Setting up Django server...") as spinner:
+    if not check_if_session_exists('jarvis'):
+        subprocess.call("tmux new-session -d -s jarvis", shell=True)
     subprocess.call(f"tmux send-keys -t jarvis '{tmux_commands}' C-m", shell=True)
     spinner.text = "Django server setup"
     spinner.ok("✅ [SUCCESS]")

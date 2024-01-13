@@ -11,11 +11,20 @@ def run_command(command, display_output=False):
         print(output.decode().strip())
         if display_output and output:
             print(output.decode().strip())
-        if "Starting development server at" in output.decode():
-            return 0
         if process.poll() is not None:
             break
     return process.returncode, process.stderr.read().decode()
+
+def check_django(command, display_output=False):
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    while True:
+        output = process.stdout.readline()
+        if display_output and output:
+            print(output.decode().strip())
+        if process.poll() is not None:
+            break
+    return process.returncode
+
 
 def install_requirements(file_path):
     with yaspin(Spinners.pong, text=f"Installing packages from {file_path}...") as spinner:
@@ -47,7 +56,7 @@ with yaspin(text="Setting up Django server...") as spinner:
 
 # Wait for Django server to start
 with yaspin(text="Starting Django server..."):
-    while run_command("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
+    while check_django("tmux capture-pane -pS - | grep -q 'Starting development server at'") != 0:
         time.sleep(1)
 
 # Fetch server IP address

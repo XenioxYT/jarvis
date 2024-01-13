@@ -29,7 +29,7 @@ pip install yaspin
 
 # kill existing tmux sessions
 echo -e "\033[1;32mKilling existing tmux sessions...\033[0m"
-run_command "tmux kill-server"
+run_command "tmux kill-session -t jarvis"
 
 # set up tmux session
 echo -e "\033[1;32mSetting up tmux session...\033[0m"
